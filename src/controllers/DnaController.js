@@ -4,6 +4,7 @@ const logger = require('../utils/logger');
 class DnaController {
   /**
    * @description Analyze DNA to know if it is mutant or human
+   * @param {object} req Obtains from the body the DNA to be analyzed
    * @return {object} Result of the analysis
    **/
   isMutant = async (req, res) => {
