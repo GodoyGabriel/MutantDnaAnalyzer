@@ -1,8 +1,8 @@
 require('dotenv').config();
 
 const configSV = {
-    hostname: 'localhost',
-    port: 4000
+    hostname: process.env.HOSTNAME_SV,
+    port: process.env.HOSTNAME_PORT
 }
 
 module.exports = { configSV };

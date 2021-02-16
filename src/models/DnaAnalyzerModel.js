@@ -1,13 +1,13 @@
 const logger = require("../utils/logger");
+const AnalysisResult = require("./AnalysisResultModel");
 
 class DnaAnalyzer {
   /**
-   * Investigate if it is human or mutant
-   * @param {object} req params
+   * @description Investigate if it is human or mutant
+   * @param {object} req Params
    * @return {object} Analyze response
    **/
   isMutant = async (req) => {
-    //const dna = ["atgcga", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"];
     const dna = req.body.dna;
     let rows = [];
     let dnaAnalyzeRes = "";
@@ -20,14 +20,18 @@ class DnaAnalyzer {
           rows.length > 0 && dnaMutantFind < 2
             ? await this.findInDiagonals(rows, dnaMutantFind)
             : dnaMutantFind;
-        if (dnaMutantFind > 1) {
+        const isMutant = dnaMutantFind > 1;
+        this.saveResultInDB(isMutant, dna.toString());
+        if (isMutant) {
           dnaAnalyzeRes = {
             status: 200,
+            data: 'Is Mutant'
           };
-          logger.info(`Is Mutant with dna matches: ${dnaMutantFind}`);
+          logger.info("Is Mutant");
         } else {
           dnaAnalyzeRes = {
             status: 403,
+            data: 'Is Mutant'
           };
           logger.info("Is Human");
         }
@@ -36,15 +40,16 @@ class DnaAnalyzer {
         console.log("error", error);
         dnaAnalyzeRes = {
           status: 400,
+          data: error
         };
       });
     return dnaAnalyzeRes;
   };
 
   /**
-   * Find mutant dna matches in rows and columns
+   * @description Find mutant dna matches in rows and columns
    * @param {Array} dna Dna to analyze
-   * @return {Object} object with rows array and mutant matches found
+   * @return {Object} Object with rows array and mutant matches found
    **/
   analyzeRowsAndCols = async (dna) => {
     let result = {
@@ -54,9 +59,9 @@ class DnaAnalyzer {
     let col = [];
     let maxLength = 0;
     let patron = /[^ATCG]/;
-    if(!Array.isArray(dna) || dna.length === 0){
-      throw 'Not an array or is empty';
-    } 
+    if (!Array.isArray(dna) || dna.length === 0) {
+      throw "Not an array or is empty.";
+    }
     for (let i = 0; i < dna.length; i++) {
       let item = dna[i];
       item = item.toUpperCase();
@@ -67,8 +72,8 @@ class DnaAnalyzer {
       if (result.dnaMutantFind > 1) {
         return result;
       }
-      if (patron.test(item) || item === '') {
-        const error = "Character not allowed";
+      if (patron.test(item) || item === "") {
+        const error = `Character not allowed: ${item}`;
         throw error;
       }
       const charactArray = item.split("");
@@ -76,7 +81,7 @@ class DnaAnalyzer {
         maxLength = charactArray.length;
       }
       if (charactArray.length !== maxLength) {
-        const error = `Error in the number of characters: ${charactArray.length}`;
+        const error = `The size of the DNA fragments do not match`;
         throw error;
       } else {
         result.rows.push(charactArray);
@@ -98,9 +103,9 @@ class DnaAnalyzer {
   };
 
   /**
-   * Search for mutant dna matches
-   * @param {String} segment dna segment
-   * @return {Boolean} mutant matches found
+   * @description Search for mutant dna matches
+   * @param {String} segment Dna segment
+   * @return {Boolean} Mutant matches found
    **/
   findDnaMutant = (segment) => {
     const conditions = ["CCCC", "TTTT", "AAAA", "GGGG"];
@@ -120,10 +125,10 @@ class DnaAnalyzer {
     return dnaMutantMatches;
   };
   /**
-   * Find mutant dna matches in all diagonals
-   * @param {Array} array dna
-   * @param {Number} dnaMutantFind mutant matches found
-   * @return {Number} mutant matches found
+   * @description Find mutant dna matches in all diagonals
+   * @param {Array} array Dna
+   * @param {Number} dnaMutantFind Mutant matches found
+   * @return {Number} Mutant matches found
    **/
   findInDiagonals = (array, dnaMutantFind) => {
     let Ylength = array.length;
@@ -153,6 +158,45 @@ class DnaAnalyzer {
       }
     }
     return dnaMutantFind;
+  };
+  /**
+   * @description Save the analysis result if the record does not yet exist in the database
+   * @param {Boolean} isMutant
+   * @param {String} dna
+   **/
+  saveResultInDB = async (isMutant, dna) => {
+    const newMutant = new AnalysisResult({ isMutant, dna });
+    const existDnaInDB = await AnalysisResult.find({ dna });
+    if (existDnaInDB.length === 0) {
+      newMutant
+        .save()
+        .then((res) => {
+          logger.info("Successfully saved in DB");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  /**
+   * @description Get the number of mutants and humans from the database and get a ratio
+   **/
+  getStatistics = async () => {
+    const count_mutant_dna = (await AnalysisResult.find({ isMutant: true }))
+      .length;
+    const count_human_dna = (await AnalysisResult.find({ isMutant: false }))
+      .length;
+    let ratio = Number(count_mutant_dna / count_human_dna);
+    const response = {
+      status: 200,
+      statistics: {
+        count_mutant_dna,
+        count_human_dna,
+        ratio,
+      },
+    };
+    return response;
   };
 }
 
