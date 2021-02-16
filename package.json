@@ -4,9 +4,9 @@
   "description": "Challenge for Meli",
   "main": "./src/index.js",
   "scripts": {
-    "dev": "nodemon src/index",
-    "start": "node src/index",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon ./src/index",
+    "start": "node ./src/index",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
