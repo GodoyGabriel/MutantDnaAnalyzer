@@ -176,6 +176,8 @@ class DnaAnalyzer {
         .catch((error) => {
           console.log(error);
         });
+    } else {
+      logger.info('This dna already exists in the database');
     }
   };
 

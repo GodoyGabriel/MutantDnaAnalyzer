@@ -1,6 +1,11 @@
 const assert = require('chai').assert;
+require(('../src/services/dbConnection'));
+const moongose = require('mongoose')
+const DnaAnalyzer = require('../src/models/DnaAnalyzerModel');
 
-const DnaAnalyzer = require('../models/DnaAnalyzerModel');
+before(async () => {
+  await moongose.connection
+})
 
 describe('DnaAnalyzerModel', () => {
   describe('isMutant', () => {
@@ -32,6 +37,17 @@ describe('DnaAnalyzerModel', () => {
       const res = DnaAnalyzer.findInDiagonals(auxDna, dnaMutantFind)
       assert.isNumber(res);
       done();
+    })
+
+    it('Get the number of mutants and humans from the database and get a ratio', (done) => {
+      DnaAnalyzer.getStatistics().then(res => {
+        if(res.status === 200) {
+          assert.containsAllKeys(res.statistics, ['count_mutant_dna', 'count_human_dna', 'ratio']);
+        } else {
+          assert.containsAllKeys(res, ['status', 'statistics']);
+        }
+        done();
+      });
     })
   })
 })
