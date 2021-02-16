@@ -198,6 +198,7 @@ class DnaAnalyzer {
         ratio,
       },
     };
+    logger.info(JSON.stringify(response));
     return response;
   };
 }

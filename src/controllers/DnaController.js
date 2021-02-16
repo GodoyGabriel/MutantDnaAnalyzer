@@ -1,4 +1,5 @@
 const DnaAnalyzer = require("../models/DnaAnalyzerModel");
+const logger = require('../utils/logger');
 
 class DnaController {
   /**
@@ -6,6 +7,7 @@ class DnaController {
    * @return {object} Result of the analysis
    **/
   isMutant = async (req, res) => {
+    logger.info('POST: /mutant');
     let response = await DnaAnalyzer.isMutant(req);
     return res.status(response.status).json(response.data);
   };
@@ -15,6 +17,7 @@ class DnaController {
    * @return {object} Statistics
    **/
   dnaResults = async (req, res) => {
+    logger.info('GET: /stats');
     let response = await DnaAnalyzer.getStatistics();
     return res.status(response.status).json(response.statistics);
   };
