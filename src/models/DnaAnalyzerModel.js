@@ -61,6 +61,9 @@ class DnaAnalyzer {
     if (!Array.isArray(dna) || dna.length === 0) {
       throw "Not an array or is empty.";
     }
+    if(dna.length !== dna[0].length){
+      throw "DNA does not form an NxN table";
+    }
     for (let i = 0; i < dna.length; i++) {
       let item = dna[i];
       item = item.toUpperCase();
