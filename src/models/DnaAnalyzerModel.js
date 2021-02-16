@@ -187,7 +187,7 @@ class DnaAnalyzer {
       .length;
     const count_human_dna = (await AnalysisResult.find({ isMutant: false }))
       .length;
-    let ratio = Number(count_mutant_dna / count_human_dna);
+    let ratio = Number(Number(count_mutant_dna / count_human_dna).toFixed(2));
     const response = {
       status: 200,
       statistics: {
