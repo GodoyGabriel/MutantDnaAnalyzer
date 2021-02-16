@@ -31,7 +31,7 @@ class DnaAnalyzer {
         } else {
           dnaAnalyzeRes = {
             status: 403,
-            data: 'Is Mutant'
+            data: 'Is Human'
           };
           logger.info("Is Human");
         }
@@ -58,7 +58,6 @@ class DnaAnalyzer {
     };
     let col = [];
     let maxLength = 0;
-    let patron = /[^ATCG]/;
     if (!Array.isArray(dna) || dna.length === 0) {
       throw "Not an array or is empty.";
     }
@@ -72,19 +71,15 @@ class DnaAnalyzer {
       if (result.dnaMutantFind > 1) {
         return result;
       }
-      if (patron.test(item) || item === "") {
-        const error = `Character not allowed: ${item}`;
-        throw error;
-      }
       const charactArray = item.split("");
       if (maxLength === 0) {
         maxLength = charactArray.length;
       }
-      if (charactArray.length !== maxLength) {
-        const error = `The size of the DNA fragments do not match`;
-        throw error;
-      } else {
+      const error = await this.errorHandling(item, maxLength);
+      if(error === '') {
         result.rows.push(charactArray);
+      } else {
+        throw error;
       }
       for (let j = 0; j < charactArray.length; j++) {
         const charact = charactArray[j];
@@ -201,6 +196,31 @@ class DnaAnalyzer {
     logger.info(JSON.stringify(response));
     return response;
   };
+
+  /**
+   * @description Error handling
+   * @param {String} item Dna segment
+   * @param {Number} maxLength Maximum size of DNA fragment
+   * @return {String} Error found
+   **/
+  errorHandling = (item, maxLength) => {
+    const patron = /[^ATCG]/;
+    item = item.toUpperCase();
+    let error = '';
+    if (patron.test(item) || item === "") {
+      error = `Character not allowed: ${item}`;
+      return error;
+    }
+    if(item.length < 4) {
+      error = `The minimum size of the DNA fragment has to be 4`;
+      return error;
+    }
+    if (maxLength && item.length !== maxLength) {
+      error = `The size of the DNA fragments do not match`;
+      return error;
+    }
+    return error;
+  }
 }
 
 module.exports = new DnaAnalyzer();

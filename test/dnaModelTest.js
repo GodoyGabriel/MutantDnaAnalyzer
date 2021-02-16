@@ -50,5 +50,28 @@ describe('DnaAnalyzerModel', () => {
       });
     })
   })
+  describe('Error handling', () => {
+    it('Character min', (done) => {
+      const fragment = "at";
+      const res = DnaAnalyzer.errorHandling(fragment);
+      assert.equal(res, 'The minimum size of the DNA fragment has to be 4')
+      done();
+    })
+
+    it('Character not allowed', (done) => {
+      const fragment = "TGCTH";
+      const res = DnaAnalyzer.errorHandling(fragment);
+      assert.equal(res, `Character not allowed: ${fragment}`)
+      done();
+    })
+
+    it('Different DNA fragment size', (done) => {
+      const fragment = "TGCTTCC";
+      const maxLengthFragment = 5;
+      const res = DnaAnalyzer.errorHandling(fragment, maxLengthFragment);
+      assert.equal(res, `The size of the DNA fragments do not match`)
+      done();
+    })
+  })
 })
 
