@@ -15,6 +15,7 @@ Endpoints validos
 * Objetivo: Devolver la cantidad de humanos y cantidad de mutantes, como tambien el ratio entre estas cantidades.
 * Ejemplo de Body de Salida: { "count_mutant_dna":40, "count_human_dna":100, "ratio":0.4}
 ### Pruebas Locales
+* Solicitar .env en caso de no tenerlo para poder levantar el proyecto, pegarlo en la raiz del mismo. 
 * Base de Datos: La base de datos esta desplegada en cloud.mongodb.com , consultar por las variables de entorno.
 * Iniciar API: Ejecutar el comando "npm install" en el directorio del mismo para poder instalar todas las dependencias del proyecto, luego ejecutar "npm start" para iniciarlo.
 * Tests: Ejecutar el comando "mocha" para que inicien los tests.
