@@ -1,5 +1,4 @@
 # X-Men Api - Analizador de ADN mutante
-## Challenge Meli
 API en Heroku = https://mutant-dna-anayzer.herokuapp.com
 
 Endpoints validos
