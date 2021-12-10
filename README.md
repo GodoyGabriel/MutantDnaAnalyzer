@@ -1,19 +1,19 @@
-# X-Men Api - Analizador de ADN mutante
-API en Heroku = https://mutant-dna-anayzer.herokuapp.com
+# X-Men Api - Mutant DNA Analyzer
+API in Heroku = https://mutant-dna-anayzer.herokuapp.com
 
-Endpoints validos
+Valid endpoints
 #### [/mutant](https://mutant-dna-anayzer.herokuapp.com/mutant)
-* Metodo: POST 
-* Objetivo: Validar la matriz ingresada por body, la cual si es valida se procederá a insertarla en la Base de Datos. Si es Mutante devolverá HTTP 200-OK, caso contrario 403-Forbidden.
-* Premisas: La matriz ingresada por body tendrá que ser cuadrada, Las letras de los Strings solo pueden ser (A,T,C,G) las cuales representa cada base nitrogenada del ADN. Es mutante, si se encuentra más de una secuencia de cuatro letras iguales, de forma oblicua, horizontal o vertical.
-* Ejemplo de Body de Entrada:
+* Method: POST 
+* Objective: Validate the matrix entered by body, which if it is valid will proceed to insert it into the Database. If it is Mutant, it will return HTTP 200-OK, otherwise 403-Forbidden.
+* Premises: The matrix entered by body will have to be square. The letters of the Strings can only be (A, T, C, G) which represents each nitrogenous base of DNA. It is mutant, if more than one sequence of four equal letters is found, obliquely, horizontally or vertically.
+* Input Body Example:
 { "dna":["ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"] }
 
 #### [/stats](https://mutant-dna-anayzer.herokuapp.com/stats)
-* Metodo: GET
-* Objetivo: Devolver la cantidad de humanos y cantidad de mutantes, como tambien el ratio entre estas cantidades.
-* Ejemplo de Body de Salida: { "count_mutant_dna":40, "count_human_dna":100, "ratio":0.4}
-### Pruebas Locales
-* Base de Datos: La base de datos esta desplegada en cloud.mongodb.com , consultar por las variables de entorno.
-* Iniciar API: Ejecutar el comando "npm install" en el directorio del mismo para poder instalar todas las dependencias del proyecto, luego ejecutar "npm start" para iniciarlo.
-* Tests: Ejecutar el comando "npm test" o "mocha" para que inicien los tests.
+* Method: GET
+* Objective: To return the number of humans and the number of mutants, as well as the ratio between these numbers.
+* Exit Body Example: { "count_mutant_dna":40, "count_human_dna":100, "ratio":0.4}
+### Local Tests
+* Database: The database is deployed at cloud.mongodb.com, check for environment variables.
+* Start API: Execute the command "npm install" in its directory to be able to install all the dependencies of the project, then execute "npm start" to start it.
+* Tests: Execute the command "npm test" or "mocha" to start the tests.
